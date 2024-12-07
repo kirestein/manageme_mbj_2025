@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ProviderApp } from "@/components/Provider";
+import TopNav from "@/components/Navbar/TopNav";
 
 
 export const metadata: Metadata = {
@@ -15,9 +17,14 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`antialiased dark`}
+        className={`antialiased dark h-screen`}
       >
-        {children}
+        <ProviderApp>
+          <TopNav />
+          <main className="container mx-auto p-10">
+            {children}
+          </main>
+        </ProviderApp>
       </body>
     </html>
   );
