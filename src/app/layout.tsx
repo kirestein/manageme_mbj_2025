@@ -21,7 +21,7 @@ export default function RootLayout({
       >
         <ProviderApp>
           <TopNav />
-          <main className="container mx-auto p-10">
+          <main className="container mx-auto p-10 w-screen" style={{ height: 'calc(100vh - 64px)' }}>
             {children}
           </main>
         </ProviderApp>
