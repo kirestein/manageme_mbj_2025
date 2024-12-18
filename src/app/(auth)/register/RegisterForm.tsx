@@ -5,15 +5,32 @@ import { GiPadlock } from 'react-icons/gi'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { registerScheema, RegisterScheema } from '@/lib/scheemas/registerScheema'
+import { registerUser } from '@/app/actions/authActions'
+import { toast } from 'react-toastify'
 
 const RegisterForm = () => {
-    const { register, handleSubmit, formState: { errors, isValid } } = useForm<RegisterScheema>({
+    const { register, handleSubmit, setError, formState: { errors, isValid, isSubmitting } } = useForm<RegisterScheema>({
         resolver: zodResolver(registerScheema),
         mode: 'onTouched'
     })
 
-    const onSubmit = (data: RegisterScheema) => {
-        console.log(data)
+    const onSubmit = async (data: RegisterScheema) => {
+        const result = await registerUser(data);
+        if (result.status === 'success') {
+            alert('User created successfully')
+        } else {
+            if (Array.isArray(result.error)) {
+                result.error.forEach((error) => {
+                    const fieldName = error.path.join('.') as 'email' | 'name' | 'password';
+                    setError(fieldName as keyof RegisterScheema, { message: error.message })
+
+                })
+                toast(result.error[0].message)
+            } else {
+                setError('root.serverError', { message: result.error })
+                toast(result.error)
+            }
+        }
     }
 
     return (
@@ -60,10 +77,15 @@ const RegisterForm = () => {
                             isInvalid={!!errors.password}
                             errorMessage={errors.password?.message as string}
                         />
+                        {errors.root?.serverError && (
+                            <p className="text-danger text-sm">{errors.root?.serverError.message}</p>
+                        )}
                         <Button
                             type='submit'
                             color='success'
                             className='w-full'
+                            isDisabled={!isValid}
+                            isLoading={isSubmitting}
                         >
                             Register
                         </Button>

@@ -1,0 +1,298 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model User {
+  id            String      @id @default(cuid())
+  email         String      @unique
+  emailVerified DateTime?
+  name          String?
+  password      String?
+  image         String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  accounts      Account[]
+  employees     employees[]
+}
+
+model department {
+  cargoId              String               @id @default(cuid())
+  employeeContractId   String               @unique
+  salario              Decimal?             @db.Decimal(10, 2)
+  bonusSalario         Decimal?             @db.Decimal(10, 2)
+  cargaHoraria         Int?
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime
+  cargo                employeeCargo?
+  employeeContractData employeeContractData @relation(fields: [employeeContractId], references: [contractDataId], onDelete: Cascade)
+}
+
+model employeeContact {
+  contactId           String                @id @default(cuid())
+  employeeDataId      String
+  contactName         String?
+  contactPhone        String?
+  contactEmail        String?
+  contactRelationship employeeRelationship?
+  employeeData        employeeData          @relation(fields: [employeeDataId], references: [employeeDataId], onDelete: Cascade, map: "employeeContact_employeeDataId_fkey_1")
+
+  @@index([employeeDataId], map: "employeeContact_employeeDataId_fkey")
+}
+
+model employeeContractData {
+  contractDataId         String                 @id @default(cuid())
+  employeeId             String
+  jobFunctions           String?
+  admissionDate          DateTime?              @db.Date
+  period                 String?
+  contractExpirationDate DateTime?              @db.Date
+  dailyHours             String?
+  weeklyHours            String?
+  monthlyHours           String?
+  weeklyClasses          String?
+  hasAccumulate          Boolean?               @default(false)
+  hasAccumulateCompany   String?
+  salary                 Decimal?               @db.Decimal(10, 2)
+  salaryBank             String?
+  salaryAgency           String?
+  salaryAccount          String?
+  salaryAccountType      String?
+  familySalary           Decimal?               @db.Decimal(10, 2)
+  parenting              String?
+  IRPF                   String?
+  status                 employeeContractStatus @default(ACTIVE)
+  jobPosition            employeeCargo?
+  department             department?
+  employees              employees              @relation(fields: [employeeId], references: [id], onDelete: Cascade, map: "employeeContractData_employeeId_fkey_2")
+
+  @@index([employeeId], map: "employeeContractData_employeeId_fkey")
+}
+
+model employeeData {
+  employeeDataId            String                 @id @default(cuid())
+  employeeId                String
+  companyNumber             Int?                   @default(1077)
+  companyName               String?                @default("Associação Educacional Canadense de São Paulo")
+  fullName                  String?
+  email                     String?
+  tagName                   String?
+  tagLastName               String?
+  birthday                  DateTime?              @db.Date
+  age                       String?
+  cep                       String?
+  employeeAddress           String?
+  employeeAddressNumber     String?
+  employeeAddressComplement String?
+  employeeAddressState      String?
+  employeeAddressCity       String?
+  phone                     String?
+  mobile                    String?
+  naturalness               String?
+  nationality               String?
+  fatherName                String?
+  motherName                String?
+  mealValue                 Decimal?               @db.Decimal(10, 2)
+  deficiency                Boolean?
+  deficiencyDescription     String?
+  transport                 Boolean?
+  transportValue            Decimal?               @db.Decimal(10, 2)
+  partnerName               String?
+  partnerCpf                String?
+  partnerBirthday           DateTime?              @db.Date
+  partnerRg                 String?
+  employeePhoto             String?
+  employeeNeighborhood      String?
+  gender                    employeeGender?
+  maritalStatus             employeeMaritalStatus? @default(SOLTEIRO)
+  graduation                employeeGraduation?
+  skinColor                 employeeSkinColor?
+  employeeContact           employeeContact[]
+  employees                 employees              @relation(fields: [employeeId], references: [id], onDelete: Cascade, map: "employeeData_employeeId_fkey_1")
+  employeeDependent         employeeDependent[]
+
+  @@index([employeeId], map: "employeeData_employeeId_fkey_2")
+}
+
+model employeeDependent {
+  dependentId           String                @id @default(cuid())
+  employeeDataId        String
+  dependentName         String?
+  dependentCpf          String?
+  dependentBirthday     DateTime?             @db.Date
+  dependentRelationship employeeRelationship?
+  employeeData          employeeData          @relation(fields: [employeeDataId], references: [employeeDataId], onDelete: Cascade, map: "employeeDependent_employeeDataId_fkey_2")
+
+  @@index([employeeDataId], map: "employeeDependent_employeeDataId_fkey")
+}
+
+model employeeDocumentation {
+  documentationId              String                  @id @default(cuid())
+  employeeId                   String
+  rg                           String?
+  rgEmitter                    String?
+  rgEmissionDate               DateTime?               @db.Date
+  cpf                          String?
+  pisPasep                     String?
+  voterTitle                   String?
+  voterZone                    String?
+  voterSection                 String?
+  voterEmission                DateTime?               @db.Date
+  militaryCertificate          String?
+  ctps                         String?
+  ctps_serie                   String?
+  driversLicense               Boolean?
+  driversLicenseNumber         String?
+  driversLicenseEmissionDate   DateTime?               @db.Date
+  driversLicenseExpirationDate DateTime?               @db.Date
+  healthPlan                   String?
+  healthCard_number            String?
+  driversLicenseCategory       driversLicenseCategory?
+  employees                    employees               @relation(fields: [employeeId], references: [id], onDelete: Cascade, map: "employeeDocumentation_employeeId_fkey_2")
+
+  @@index([employeeId], map: "employeeDocumentation_employeeId_fkey")
+}
+
+model employeeTraineeData {
+  traineeId                  String    @id @default(cuid())
+  employeeId                 String
+  collegeCep                 String?
+  traineeAddress             String?
+  traineeAddressNumber       Int?      @db.SmallInt
+  traineeAddressNeighborhood String?
+  traineeAddressComplement   String?
+  traineeAddressState        String?
+  traineeAddressCity         String?
+  college                    String?
+  course                     String?
+  trainingPeriod             String?
+  lifInsurancePolicy         String?
+  ra                         String?
+  employees                  employees @relation(fields: [employeeId], references: [id], onDelete: Cascade, map: "employeeTraineeData_employeeId_fkey_2")
+
+  @@index([employeeId], map: "employeeTraineeData_employeeId_fkey")
+}
+
+model employees {
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @default(now())
+  id                    String                  @id @default(cuid())
+  employeeContractData  employeeContractData[]
+  employeeData          employeeData[]
+  employeeDocumentation employeeDocumentation[]
+  employeeTraineeData   employeeTraineeData[]
+  userId                String
+  user                  User                    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "employees_userId_fkey")
+}
+
+model forms {
+  parametro_id String @id @default(cuid())
+  nome         String
+  tipo         Int    @db.SmallInt
+}
+
+enum driversLicenseCategory {
+  A
+  B
+  C
+  D
+  E
+  AB
+  AC
+  AD
+  AE
+}
+
+enum employeeCargo {
+  PROFESSOR
+  COORDENADOR
+  DIRETOR
+  SECRETARIA
+  PEDAGOGO
+  AUXILIAR_SERVICOS_GERAIS
+  MOTORISTA
+  MONITOR
+  ESTAGIARIO
+  AUXILIAR_PEDAGOGICO
+  OUTRO
+}
+
+enum employeeContractStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum employeeGender {
+  MASCULINO
+  FEMININO
+  OTHER
+  NO_ONE
+}
+
+enum employeeGraduation {
+  ENSINO_FUNDAMENTAL
+  ENSINO_MEDIO
+  ENSINO_SUPERIOR_CURSANDO
+  ENSINO_SUPERIOR_COMPLETO
+  POS_GRADUACAO_CURSANDO
+  POS_GRADUACAO_COMPLETO
+  MESTRADO_CURSANDO
+  MESTRADO_COMPLETO
+  DOUTORADO_CURSANDO
+  DOUTORADO_COMPLETO
+  POS_DOUTORADO_CURSANDO
+  POS_DOUTORADO_COMPLETO
+  OUTRO
+}
+
+enum employeeMaritalStatus {
+  SOLTEIRO
+  CASADO
+  DIVORCIADO
+  VIUVO
+  OUTRO
+}
+
+enum employeeRelationship {
+  PAI
+  MAE
+  FILHO
+  FILHA
+  ESPOSO
+  ESPOSA
+  IRMAO
+  IRMA
+  OUTRO
+}
+
+enum employeeSkinColor {
+  BRANCO
+  NEGRO
+  AMARELO
+  PARD0
+  INDIGENAS
+  OUTRO
+}

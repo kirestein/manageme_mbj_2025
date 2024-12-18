@@ -1,13 +1,16 @@
 import React from 'react'
 import Logo from '@/../public/assets/img/design.png'
 import Image from 'next/image'
-import { Button, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/react'
+import { Button, Navbar, NavbarBrand, NavbarContent } from '@nextui-org/react'
 import Link from 'next/link'
 import NavLinks from './NavLinks'
+import { auth } from '@/auth'
+import UserMenu from './UserMenu'
 // TODO import font from google fonts
 
 
-const TopNav = () => {
+const TopNav = async () => {
+    const session = await auth();
     return (
         <Navbar
             maxWidth='full'
@@ -46,12 +49,19 @@ const TopNav = () => {
                 <NavLinks />
             </NavbarContent>
             <NavbarContent justify='end'>
-                <Button as={Link} href='/login' variant='bordered' className=''>
-                    Login
-                </Button>
-                <Button as={Link} href='/register' variant='bordered' className='ml-4'>
-                    Register
-                </Button>
+                {session?.user ? (
+                    <UserMenu user={session.user} />
+                ) : (
+                    <>
+                        <Button as={Link} href='/login' variant='bordered' className=''>
+                            Login
+                        </Button>
+                        <Button as={Link} href='/register' variant='bordered' className='ml-4'>
+                            Register
+                        </Button>
+
+                    </>
+                )}
             </NavbarContent>
 
         </Navbar>
