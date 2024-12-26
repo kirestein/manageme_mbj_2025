@@ -1,0 +1,7 @@
+services:
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=postgresmbj
+    ports:
+      - 5435:5435
