@@ -124,6 +124,7 @@ export const employees = [
     employeeId: "1",
     createdAt: "1023-02-01T14:30:00.000Z",
     updatedAt: "2023-02-01T14:30:00.000Z",
+    userId: "cm4rhn9yk0000lv0oqk3m3pb3",
     employeeData: {
       employeeId: 1,
       employeeDataId: 1,
