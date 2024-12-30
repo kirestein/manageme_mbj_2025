@@ -65,7 +65,7 @@ model employeeContact {
 
 model employeeContractData {
   contractDataId         String                 @id @default(cuid())
-  employeeId             String
+  employeeId             String                 @unique
   jobFunctions           String?
   admissionDate          DateTime?              @db.Date
   period                 String?

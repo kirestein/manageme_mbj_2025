@@ -448,8 +448,7 @@ export default function EmployeesTable({ employeesData }: EmployeeDataProps) {
                                 </Button>
                             </DropdownTrigger>
                             <DropdownMenu>
-                                <DropdownItem key="view">View</DropdownItem>
-                                <DropdownItem as={Link} href="employees/employeeId" key="edit">Edit</DropdownItem>
+                                <DropdownItem as={Link} href={`/employees/${employee.employeeId}`} key="edit">View</DropdownItem>
                                 <DropdownItem key="delete">Delete</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
