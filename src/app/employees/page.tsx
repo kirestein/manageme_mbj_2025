@@ -1,8 +1,16 @@
 import React from 'react'
+import EmployeesTable from './EmployeesTable'
+import { getEmployeeData } from '../actions/employeeActions'
+import { employeeData } from '@prisma/client'
 
-const EmployeesPage = () => {
+
+
+const EmployeesPage = async () => {
+    const employeesData: employeeData[] = (await getEmployeeData()) || []
     return (
-        <div>EmployeesPage</div>
+        <div>
+            {employeesData && <EmployeesTable employeesData={employeesData} />}
+        </div>
     )
 }
 
