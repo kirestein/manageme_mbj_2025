@@ -3,22 +3,9 @@ import {
   employeeMaritalStatus,
   PrismaClient,
 } from "@prisma/client";
-import { employees, users } from "./employeesData";
+import { employees } from "./employeesData";
 
 const prisma = new PrismaClient();
-
-async function seedUsers() {
-  return users.map(async (user) =>
-    prisma.user.create({
-      data: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        password: user.password,
-      },
-    })
-  );
-}
 
 async function seedEmployees() {
   return employees.map(async (employee) =>
@@ -52,6 +39,14 @@ async function seedEmployees() {
             motherName: employee.employeeData.motherName,
           },
         },
+        employeeDocumentation: {
+          create: {
+            documentationId: employee.employeeDocumentation.documentationId,
+            rg: employee.employeeDocumentation.rg,
+            rgEmitter: employee.employeeDocumentation.rgEmitter,
+            cpf: employee.employeeDocumentation.cpf,
+          },
+        },
       },
     })
   );
@@ -59,7 +54,6 @@ async function seedEmployees() {
 
 async function main() {
   await seedEmployees();
-  await seedUsers();
 }
 
 main()

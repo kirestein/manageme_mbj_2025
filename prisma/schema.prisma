@@ -53,7 +53,7 @@ model department {
 
 model employeeContact {
   contactId           String                @id @default(cuid())
-  employeeDataId      String
+  employeeDataId      String                @unique
   contactName         String?
   contactPhone        String?
   contactEmail        String?
@@ -94,7 +94,7 @@ model employeeContractData {
 
 model employeeData {
   employeeDataId            String                 @id @default(cuid())
-  employeeId                String
+  employeeId                String                 @unique
   companyNumber             Int?                   @default(1077)
   companyName               String?                @default("Associação Educacional Canadense de São Paulo")
   fullName                  String?
@@ -124,7 +124,7 @@ model employeeData {
   partnerCpf                String?
   partnerBirthday           DateTime?              @db.Date
   partnerRg                 String?
-  employeePhoto             String?
+  employeePhoto             Bytes?
   employeeNeighborhood      String?
   gender                    employeeGender?
   maritalStatus             employeeMaritalStatus? @default(SOLTEIRO)
@@ -139,7 +139,7 @@ model employeeData {
 
 model employeeDependent {
   dependentId           String                @id @default(cuid())
-  employeeDataId        String
+  employeeDataId        String                @unique
   dependentName         String?
   dependentCpf          String?
   dependentBirthday     DateTime?             @db.Date
@@ -151,7 +151,7 @@ model employeeDependent {
 
 model employeeDocumentation {
   documentationId              String                  @id @default(cuid())
-  employeeId                   String
+  employeeId                   String                  @unique
   rg                           String?
   rgEmitter                    String?
   rgEmissionDate               DateTime?               @db.Date
@@ -178,7 +178,7 @@ model employeeDocumentation {
 
 model employeeTraineeData {
   traineeId                  String    @id @default(cuid())
-  employeeId                 String
+  employeeId                 String    @unique
   collegeCep                 String?
   traineeAddress             String?
   traineeAddressNumber       Int?      @db.SmallInt

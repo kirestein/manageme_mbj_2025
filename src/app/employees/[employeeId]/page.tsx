@@ -2,6 +2,7 @@ import { getEmployeeById } from '@/app/actions/employeeActions'
 import { notFound } from 'next/navigation'
 import React from 'react'
 import { Card, CardHeader, CardBody, CardFooter } from "@nextui-org/card";
+import Image from 'next/image';
 
 const EmployeePage = async ({ params }: { params: { employeeId: string } }) => {
     const employee = await getEmployeeById(params.employeeId)
@@ -14,13 +15,20 @@ const EmployeePage = async ({ params }: { params: { employeeId: string } }) => {
         <div className="">
             <Card className='bg-teal-100'>
                 <CardHeader className='flex justify-center'>
+                    <Image
+                        src={typeof employee[0].employeeData?.employeePhoto === 'string' ? employee[0].employeeData.employeePhoto : '/assets/img/user.png'}
+                        width={50}
+                        height={50}
+                        className="rounded-full mr-4"
+                        alt='Employee Photo'
+                    />
                     <h1 className='text-4xl font-bold text-teal-600'>{employee[0].employeeData?.fullName}</h1>
                 </CardHeader>
                 <hr className="" />
                 <CardBody>
                     <h2 className='text-2xl font-bold mb-4 text-teal-500'>Employee Data:</h2>
                     <div className="grid-cols-3 grid gap-4">
-                        <div className="flex flex-col col-span-1">
+                        <div className="flex flex-col col-span-1 gap-4">
                             <p className='flex items-center text-xl gap-2'>
                                 <span className="font-bold">E-mail:</span>  {employee[0].employeeData?.email}
                             </p>
@@ -65,7 +73,7 @@ const EmployeePage = async ({ params }: { params: { employeeId: string } }) => {
                             </p>
                         </div>
                         {/* segunda coluna */}
-                        <div className="flex flex-col col-span-1">
+                        <div className="flex flex-col col-span-1 gap-4">
                             <p className='flex items-center text-xl gap-2'>
                                 <span className="font-bold">Formação:</span>  {employee[0].employeeData?.graduation}
                             </p>
@@ -110,7 +118,7 @@ const EmployeePage = async ({ params }: { params: { employeeId: string } }) => {
                             }
                         </div>
                         {/* terceira coluna */}
-                        <div className="flex flex-col col-span-1">
+                        <div className="flex flex-col col-span-1 gap-4">
                             <p className='flex items-center text-xl gap-2'>
                                 <span className="font-bold">Vale alimentação:</span>  {employee[0].employeeData?.mealValue?.toString()}
                             </p>
@@ -128,7 +136,7 @@ const EmployeePage = async ({ params }: { params: { employeeId: string } }) => {
                     <hr className="mt-4" />
                     <h2 className='text-2xl font-bold my-4 text-teal-500'>Employee Contract Data:</h2>
                     <div className="grid-cols-3 grid gap-4">
-                        <div className="flex flex-col col-span-1">
+                        <div className="flex flex-col col-span-1 gap-4">
                             <p className='flex items-center text-xl gap-2'>
                                 <span className="font-bold">Função:</span>  {employee[0].employeeContractData?.jobFunctions ?? 'N/A'}
                             </p>
@@ -157,7 +165,7 @@ const EmployeePage = async ({ params }: { params: { employeeId: string } }) => {
                             </p>
                         </div>
                         {/* segunda coluna */}
-                        <div className="flex flex-col col-span-1">
+                        <div className="flex flex-col col-span-1 gap-4">
                             <p className='flex items-center text-xl gap-2'>
                                 <span className="font-bold">IRPF:</span>  {employee[0].employeeContractData?.IRPF}
                             </p>
@@ -181,7 +189,7 @@ const EmployeePage = async ({ params }: { params: { employeeId: string } }) => {
                             </p>
                         </div>
                         {/* terceira coluna */}
-                        <div className="flex flex-col col-span-1">
+                        <div className="flex flex-col col-span-1 gap-4">
                             <p className='flex items-center text-xl gap-2'>
                                 <span className="font-bold ">Data de de expiração do contrato:</span>  {employee[0].employeeContractData?.contractExpirationDate ? new Date(employee[0].employeeContractData?.contractExpirationDate).toLocaleDateString(
                                     'pt-BR', {
@@ -209,7 +217,7 @@ const EmployeePage = async ({ params }: { params: { employeeId: string } }) => {
                     <hr className="mt-4" />
                     <h2 className='text-2xl font-bold my-4 text-teal-500'>Employee Documentation:</h2>
                     <div className="grid-cols-3 grid gap-4">
-                        <div className="flex flex-col col-span-1">
+                        <div className="flex flex-col col-span-1 gap-4">
                             <p className='flex items-center text-xl gap-2'>
                                 <span className="font-bold">RG:</span>  {employee[0].employeeDocumentation?.[0]?.rg ?? 'N/A'}
                             </p>
@@ -236,7 +244,7 @@ const EmployeePage = async ({ params }: { params: { employeeId: string } }) => {
                             </p>
                         </div>
                         {/* segunda coluna */}
-                        <div className="flex flex-col col-span-1">
+                        <div className="flex flex-col col-span-1 gap-4">
                             <p className='flex items-center text-xl gap-2'>
                                 <span className="font-bold">Título de eleitor:</span>  {employee[0].employeeDocumentation?.[0]?.voterTitle ?? 'N/A'}
                             </p>
@@ -269,7 +277,7 @@ const EmployeePage = async ({ params }: { params: { employeeId: string } }) => {
                             </p>
                         </div>
                         {/* terceira coluna */}
-                        <div className="flex flex-col col-span-1">
+                        <div className="flex flex-col col-span-1 gap-4">
                             <p className='flex items-center text-xl gap-2'>
                                 <span className="font-bold">Possui hanilitação:</span>  {employee[0].employeeDocumentation?.[0]?.driversLicense ?? 'N/A'}
                             </p>
